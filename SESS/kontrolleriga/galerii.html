@@ -1,0 +1,8 @@
+<?php
+echo '<h3>Fotod</h3>';
+echo '<div id="gallery">';
+foreach ($pildid as $pilt){
+	echo '<img src="'.$pilt['src'].'" alt="'.$pilt['alt'].'" />';
+}
+echo '</div>';
+?>

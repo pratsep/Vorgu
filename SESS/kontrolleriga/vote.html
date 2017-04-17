@@ -1,0 +1,17 @@
+<?php
+echo '<h3>Vali oma lemmik :)</h3>';
+echo '<form action="?page=tulemus" method="POST">';
+$mitu = 1;
+foreach ($pildid as $pilt){
+	echo '<p>';
+	echo '<label for="p'.$mitu.'">';
+	echo '<img src="'.$pilt["src"].'" alt="'.$pilt["alt"].'" height="100" />';
+	echo '</label>';
+	echo '<input type="radio" value="'.$mitu.'" id="p'.$mitu.'" name="pilt"/>';
+	echo '</p>';
+	$mitu=$mitu+1;
+}
+echo '<br/>';
+echo '<input type="submit" value="Valin!"/>';
+echo '</form>';
+?>

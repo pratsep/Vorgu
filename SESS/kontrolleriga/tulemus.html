@@ -1,0 +1,16 @@
+<?php
+if(!empty($_POST)){
+	if(!isset($_SESSION['voted_for'])){
+		$_SESSION['voted_for']=$_POST['pilt'];
+		echo 'Hääletasite pildi nr. '.$_POST['pilt'].' poolt.';
+	}
+	else {
+		echo 'Mitu korda ei saa hääletada. Valitud on juba pilt nr.'.$_SESSION['voted_for'];
+	}
+
+} else {
+	if(isset($_SESSION['voted_for'])){
+		echo 'Olete juba hääletanud pildi nr. '.$_SESSION['voted_for'].' poolt';
+	}
+}
+?>
