@@ -1,0 +1,11 @@
+CREATE TABLE pratsep_loomaaed(id INTEGER PRIMARY KEY AUTO_INCREMENT, nimi VARCHAR(30), vanus INTEGER, liik VARCHAR(50), puur INTEGER);
+
+INSERT INTO pratsep_loomaaed (nimi, vanus, liik, puur) VALUES ('Gizmo', 5, 'makaak', 1), ('Ergo', 20, 'koer', 2), ('Juunior', 3, 'gorilla', 2), ('Selku', 3, 'makaak', 3), ('Viiner', 1, 'Krokodill', 1);
+
+SELECT nimi, puur FROM pratsep_loomaaed WHERE puur=2;
+
+SELECT MAX(vanus), MIN(vanus) FROM pratsep_loomaaed;
+
+SELECT puur, COUNT(*) FROM pratsep_loomaaed GROUP BY puur;
+
+UPDATE pratsep_loomaaed SET vanus=vanus+1;
