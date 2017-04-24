@@ -24,10 +24,19 @@ function logout(){
 }
 
 function kuva_puurid(){
-	// siia on vaja funktsionaalsust
+    $puurid = array();
+    global $connection;
+    $query_1="SELECT DISTINCT puur FROM pratsep_loomaaed";
+    $result_1=mysqli_query($connection, $query_1);
 
-	include_once('views/puurid.html');
-	
+    while ($row_1 = mysqli_fetch_assoc($result_1)){
+        $query_2 = "SELECT * FROM pratsep_loomaaed WHERE puur=".$row_1['puur'];
+        $result_2 = mysqli_query($connection, $query_2);
+        while ($row_2 = mysqli_fetch_assoc($result_2)){
+            $puurid[$row_1['puur']][]=$row_2;
+        }
+    }
+    include_once('views/puurid.html');
 }
 
 function lisa(){
