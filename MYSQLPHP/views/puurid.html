@@ -1,5 +1,10 @@
-<?php
-echo "<pre>";
-print_r($puurid);
-echo "</pre>";
-?>
+<?php if (!empty($puurid)):?>
+<?php foreach($puurid as $key1=>$puur): ?>
+<div>
+    <h1>Puur <?php echo $key1; ?></h1>
+    <?php foreach($puur as $key2=>$loom): ?>
+    <img src="<?php echo $loom['liik']; ?>" alt="<?php echo $loom['nimi']; ?>">
+    <?php endforeach; ?>
+</div>
+<?php endforeach; ?>
+<?php endif;?>
