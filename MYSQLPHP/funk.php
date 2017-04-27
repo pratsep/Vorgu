@@ -12,7 +12,33 @@ function connect_db(){
 }
 
 function logi(){
-	// siia on vaja funktsionaalsust (13. nädalal)
+    global $connection;
+    $errors = array();
+    if(isset($_SESSION['user'])){
+        header('Location: ?page=loomad');
+        exit();
+    }
+    else{
+        if($_SERVER["REQUEST_METHOD"] == "POST"){
+            if(!empty($_POST['user']) && !empty($_POST['pass'])){
+                $username = mysqli_real_escape_string($connection, $_POST['user']);
+                $password = mysqli_real_escape_string($connection, $_POST['pass']);
+                $query = "SELECT * FROM pratsep_kylastajad WHERE username = '$username' AND passw = SHA1('$password')";
+                $result = mysqli_query($connection, $query);
+                $row = mysqli_fetch_assoc($result);
+                if(mysqli_num_rows($result)>0){
+                    $_SESSION['user'] = htmlspecialchars($row['username']);
+                    header("Location: ?page=loomad");
+                }
+                else{
+                    $errors[] = "Vale kasutaja või parool";
+                }
+            }
+            else{
+                $errors[] = "Kõik väljad tuleb ära täita";
+            }
+        }
+    }
 
 	include_once('views/login.html');
 }
