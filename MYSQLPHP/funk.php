@@ -52,21 +52,57 @@ function logout(){
 function kuva_puurid(){
     $puurid = array();
     global $connection;
-    $query_1="SELECT DISTINCT puur FROM pratsep_loomaaed";
-    $result_1=mysqli_query($connection, $query_1);
+    if(empty($_SESSION["user"])){
+        header("Location: ?page=login");
+    } else {
+        $query_1 = "SELECT DISTINCT puur FROM pratsep_loomaaed";
+        $result_1 = mysqli_query($connection, $query_1);
 
-    while ($row_1 = mysqli_fetch_assoc($result_1)){
-        $query_2 = "SELECT * FROM pratsep_loomaaed WHERE puur=".$row_1['puur'];
-        $result_2 = mysqli_query($connection, $query_2);
-        while ($row_2 = mysqli_fetch_assoc($result_2)){
-            $puurid[$row_1['puur']][]=$row_2;
+        while ($row_1 = mysqli_fetch_assoc($result_1)) {
+            $query_2 = "SELECT * FROM pratsep_loomaaed WHERE puur=" . $row_1['puur'];
+            $result_2 = mysqli_query($connection, $query_2);
+            while ($row_2 = mysqli_fetch_assoc($result_2)) {
+                $puurid[$row_1['puur']][] = $row_2;
+            }
         }
     }
     include_once('views/puurid.html');
 }
 
 function lisa(){
-	// siia on vaja funktsionaalsust (13. nädalal)
+    global $connection;
+    $errors = array();
+    if(!isset($_SESSION['user'])){
+        header('Location: ?page=login');
+        exit();
+    }
+    else{
+        if($_SERVER["REQUEST_METHOD"] == "POST"){
+            if(!empty($_POST['nimi']) && !empty($_POST['puur']) && upload('liik') != ""){
+                $username = mysqli_real_escape_string($connection, $_POST["nimi"]);
+                $cage = mysqli_real_escape_string($connection, $_POST["puur"]);
+                $species = mysqli_real_escape_string($connection, upload("liik"));
+                $query = "INSERT INTO pratsep_loomaaed(nimi, puur, liik) VALUES ('$username', '$cage', '$species')";
+                $result = mysqli_query($connection, $query);
+                if (mysqli_insert_id($connection)) {
+                    header("Location: ?page=loomad");
+                } else {
+                    header("Location: ?page=loomavorm");
+                }
+            }
+            else{
+                if(empty($_POST["nimi"])) {
+                    $errors[] = "Täitke nime väli";
+                }
+                if(empty($_POST["puur"])) {
+                    $errors[] = "Täitke puuri väli";
+                }
+                if(upload('liik') == ""){
+                    $errors[] = "Pildi lisamine ebõnnestus";
+                }
+            }
+        }
+    }
 	
 	include_once('views/loomavorm.html');
 	
