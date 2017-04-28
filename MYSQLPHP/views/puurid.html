@@ -1,10 +1,16 @@
 <?php if (!empty($puurid)):?>
-<?php foreach($puurid as $key1=>$puur): ?>
-<div>
-    <h1>Puur <?php echo $key1; ?></h1>
-    <?php foreach($puur as $key2=>$loom): ?>
-    <img src="<?php echo $loom['liik']; ?>" alt="<?php echo $loom['nimi']; ?>">
+    <?php foreach($puurid as $key1=>$puur): ?>
+        <div>
+            <h1>Puur <?php echo $key1; ?></h1>
+            <?php foreach($puur as $key2=>$loom): ?>
+                <?php if($_SESSION["roll"] == "admin"): ?>
+                    <a href="?page=muuda&id=<?php echo $loom['id']; ?>">
+                <?php endif; ?>
+                <img src="<?php echo $loom['liik']; ?>" alt="<?php echo $loom['nimi']; ?>">
+                <?php if($_SESSION["roll"] == "admin"): ?>
+                    </a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
     <?php endforeach; ?>
-</div>
-<?php endforeach; ?>
 <?php endif;?>

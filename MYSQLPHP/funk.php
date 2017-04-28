@@ -1,6 +1,5 @@
 <?php
 
-
 function connect_db(){
 	global $connection;
 	$host="localhost";
@@ -28,6 +27,7 @@ function logi(){
                 $row = mysqli_fetch_assoc($result);
                 if(mysqli_num_rows($result)>0){
                     $_SESSION['user'] = htmlspecialchars($row['username']);
+                    $_SESSION['roll'] = htmlspecialchars($row['roll']);
                     header("Location: ?page=loomad");
                 }
                 else{
@@ -51,6 +51,7 @@ function logout(){
 
 function kuva_puurid(){
     $puurid = array();
+    //$suva = array();
     global $connection;
     if(empty($_SESSION["user"])){
         header("Location: ?page=login");
@@ -59,6 +60,7 @@ function kuva_puurid(){
         $result_1 = mysqli_query($connection, $query_1);
 
         while ($row_1 = mysqli_fetch_assoc($result_1)) {
+            //$suva[] = $row_1;
             $query_2 = "SELECT * FROM pratsep_loomaaed WHERE puur=" . $row_1['puur'];
             $result_2 = mysqli_query($connection, $query_2);
             while ($row_2 = mysqli_fetch_assoc($result_2)) {
@@ -66,6 +68,10 @@ function kuva_puurid(){
             }
         }
     }
+
+    //echo "<pre>";
+    //print_r($puurid);
+    //echo "</pre>";
     include_once('views/puurid.html');
 }
 
@@ -75,8 +81,9 @@ function lisa(){
     if(!isset($_SESSION['user'])){
         header('Location: ?page=login');
         exit();
-    }
-    else{
+    } elseif($_SESSION["roll"] != "admin") {
+        header("Location: ?page=loomad");
+    } else {
         if($_SERVER["REQUEST_METHOD"] == "POST"){
             if(!empty($_POST['nimi']) && !empty($_POST['puur']) && upload('liik') != ""){
                 $username = mysqli_real_escape_string($connection, $_POST["nimi"]);
