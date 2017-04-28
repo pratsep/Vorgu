@@ -14,6 +14,9 @@ switch($page){
 	case "login":
 		logi();
 	break;
+    case "muuda":
+        muuda();
+        break;
 	case "loomad":
 		kuva_puurid();
 	break;

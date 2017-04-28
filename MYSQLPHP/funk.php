@@ -48,7 +48,52 @@ function logout(){
 	session_destroy();
 	header("Location: ?");
 }
-
+function muuda(){
+    global  $connection;
+    if (!isset($_SESSION["user"]) || $_SESSION["roll"] != "admin") {
+        header("Location: ?page=login");
+        exit();
+    } else {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET["id"] != ""){
+            $id = mysqli_real_escape_string($connection, $_GET["id"]);
+            $loom = hangi_loom($id);
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['id'] != ""){
+            if ($_POST["nimi"] == "") {
+                $errors[] = "Nimi on puudu!";
+            } elseif ($_POST["puur"] == ""){
+                $errors[] = "Puur on puudu!";
+            } else {
+                $id = mysqli_real_escape_string($connection, $_POST["id"]);
+                $loom = hangi_loom($id);
+                $nimi = mysqli_real_escape_string($connection, $_POST["nimi"]);
+                $puur = mysqli_real_escape_string($connection, $_POST["puur"]);
+                if (upload("liik")) {
+                    $liik = mysqli_real_escape_string($connection, upload("liik"));
+                } else {
+                    $liik = $loom['liik'];
+                }
+                $sql = "UPDATE pratsep_loomaaed SET nimi = '$nimi', puur = '$puur', liik = '$liik' WHERE id = '$id'";
+                $result = mysqli_query($connection, $sql);
+                header("Location: ?page=loomad");
+            }
+        }
+        else {
+            header("Location: ?page=loomad");
+        }
+    }
+    include_once('views/editvorm.html');
+}
+function hangi_loom($id){
+    global $connection;
+    $query = "SELECT * FROM pratsep_loomaaed WHERE id='$id'";
+    $result = mysqli_query($connection, $query);
+    if (mysqli_num_rows($result)>0) {
+        $loom = mysqli_fetch_assoc($result);
+        return $loom;
+    } else {
+        header("Location: ?page=loomad");
+    }
+}
 function kuva_puurid(){
     $puurid = array();
     //$suva = array();
@@ -90,7 +135,7 @@ function lisa(){
                 $cage = mysqli_real_escape_string($connection, $_POST["puur"]);
                 $species = mysqli_real_escape_string($connection, upload("liik"));
                 $query = "INSERT INTO pratsep_loomaaed(nimi, puur, liik) VALUES ('$username', '$cage', '$species')";
-                $result = mysqli_query($connection, $query);
+                $loom = mysqli_query($connection, $query);
                 if (mysqli_insert_id($connection)) {
                     header("Location: ?page=loomad");
                 } else {
